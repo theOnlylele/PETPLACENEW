@@ -37,7 +37,7 @@
                     </div>
                 @endif
 
-                <h3 style="color:#392d54;">{{ $listedPet->pet_name }}</h3>
+                <h3 style="color:#392d54; max-width:100%; overflow-wrap:anywhere; word-break:break-word; white-space:normal; line-height:1.3; margin:0 0 6px;">{{ $listedPet->pet_name }}</h3>
                 <p style="color:#81798e; font-size:13px;">{{ $listedPet->pet_type }}</p>
             </a>
         @endforeach
@@ -58,15 +58,50 @@
                     </div>
                 @endif
 
-                <div>
-                    <h2 style="margin-bottom:8px;">{{ $pet->pet_name }}</h2>
-                    <p style="color:#81798e;">Type: {{ $pet->pet_type }}</p>
+                <div style="flex:1 1 220px; min-width:0; max-width:100%; overflow-wrap:anywhere;">
+                    <h2 style="margin-bottom:8px; max-width:100%; overflow-wrap:anywhere; word-break:break-word; white-space:normal; line-height:1.3;">{{ $pet->pet_name }}</h2>
+                    <p style="color:#81798e;">Type: {{ ucfirst($pet->pet_type) }}</p>
+                    <p style="color:#81798e;">Breed: {{ $pet->breed ?: 'Not provided' }}</p>
+                    <p style="color:#81798e;">Weight: {{ $pet->weight !== null ? $pet->weight . ' kg' : 'Not provided' }}</p>
+                    <p style="color:#81798e;">Allergies: {{ $pet->allergies ?: 'Not provided' }}</p>
                     <p style="color:#81798e;">
                         Birthdate:
                         {{ $pet->pet_birthdate ? $pet->pet_birthdate->format('F d, Y') : 'Not provided' }}
                     </p>
                 </div>
             </div>
+
+            <hr style="border:0; border-top:1px solid #eeeaf5; margin:25px 0;">
+
+            <h2>Update Pet Details</h2>
+            <form method="POST" action="{{ route('owner.pet-profile.update') }}">
+                @csrf
+                @method('PATCH')
+                <input type="hidden" name="pet_id" value="{{ $pet->id }}">
+
+                <div class="form-group">
+                    <label for="breed">Breed</label>
+                    <input type="text" name="breed" id="breed" class="form-control"
+                           value="{{ old('breed', $pet->breed) }}"
+                           placeholder="Enter your pet's breed">
+                </div>
+
+                <div class="form-group">
+                    <label for="weight">Weight (kg)</label>
+                    <input type="number" name="weight" id="weight" class="form-control"
+                           value="{{ old('weight', $pet->weight) }}"
+                           min="0.01" max="99999.99" step="0.01"
+                           placeholder="Enter weight in kilograms">
+                </div>
+
+                <div class="form-group">
+                    <label for="allergies">Allergies</label>
+                    <textarea name="allergies" id="allergies" class="form-control" rows="3"
+                              placeholder="List known allergies, or leave blank if none are known">{{ old('allergies', $pet->allergies) }}</textarea>
+                </div>
+
+                <button type="submit" class="btn">Save Pet Details</button>
+            </form>
 
             <hr style="border:0; border-top:1px solid #eeeaf5; margin:25px 0;">
 

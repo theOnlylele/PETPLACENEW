@@ -457,6 +457,9 @@ class OwnerDashboardController extends Controller
                 'date',
                 'before_or_equal:today'
             ],
+            'breed' => ['nullable', 'string', 'max:255'],
+            'weight' => ['nullable', 'numeric', 'gt:0', 'max:99999.99'],
+            'allergies' => ['nullable', 'string', 'max:4000'],
             'pet_photo' => [
                 'nullable',
                 'image',
@@ -476,6 +479,9 @@ class OwnerDashboardController extends Controller
                 ? $validated['pet_type_other']
                 : $validated['pet_type'],
             'pet_birthdate' => $validated['pet_birthdate'] ?? null,
+            'breed' => $validated['breed'] ?? null,
+            'weight' => $validated['weight'] ?? null,
+            'allergies' => $validated['allergies'] ?? null,
         ]);
 
         if ($request->hasFile('pet_photo')) {
@@ -517,6 +523,9 @@ class OwnerDashboardController extends Controller
                 'date',
                 'before_or_equal:today'
             ],
+            'breed' => ['sometimes', 'nullable', 'string', 'max:255'],
+            'weight' => ['sometimes', 'nullable', 'numeric', 'gt:0', 'max:99999.99'],
+            'allergies' => ['sometimes', 'nullable', 'string', 'max:4000'],
             'pet_photo' => [
                 'nullable',
                 'image',
@@ -527,6 +536,12 @@ class OwnerDashboardController extends Controller
 
         if (array_key_exists('pet_birthdate', $validated)) {
             $pet->pet_birthdate = $validated['pet_birthdate'];
+        }
+
+        foreach (['breed', 'weight', 'allergies'] as $field) {
+            if (array_key_exists($field, $validated)) {
+                $pet->{$field} = $validated[$field];
+            }
         }
 
         if ($request->hasFile('pet_photo')) {
