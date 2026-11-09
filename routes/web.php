@@ -217,6 +217,26 @@ Route::middleware(['auth'])->group(function () {
         OwnerDashboardController::class,
         'requestAppointment'
     ])->name('owner.appointments.store');
+
+
+
+    // GROOMER APPOINTMENT ACTIONS
+    Route::patch('/groomer/appointments/{appointment}', [
+      App\Http\Controllers\GroomerDashboardController::class,
+      'updateAppointment'
+      ])->name('groomer.appointments.update');
+
+
+     // GROOMER SCHEDULE
+    Route::get('/groomer/schedule', [
+       App\Http\Controllers\GroomerDashboardController::class,
+    'schedule'
+     ])->name('groomer.schedule');
+
+     Route::put('/groomer/availability', [
+        App\Http\Controllers\GroomerDashboardController::class,
+    'saveAvailability'
+])->name('groomer.availability.update');
 });
 
 // BREEZE AUTH ROUTES
